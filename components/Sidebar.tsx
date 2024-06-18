@@ -4,7 +4,6 @@ import {useKindeBrowserClient} from "@kinde-oss/kinde-auth-nextjs";
 import {User} from 'lucide-react'
 import { ScrollArea } from "@/components/ui/scroll-area"
 import {Button} from '@/components/ui/button'
-import { SidebarButton } from './SidebarButton';
 import Link from 'next/link'
 import {
     Tooltip,
@@ -20,9 +19,10 @@ type Props = {
     userId: string;
     balance: number;
     memberTeamsData: TeamMemberType[];
+    userEmail: string;
 }
 
-export default function Sidebar({all_owned_teams, userId, balance, memberTeamsData}: Props) {
+export default function Sidebar({all_owned_teams, userId, balance, memberTeamsData, userEmail}: Props) {
     const {
         user,
       } = useKindeBrowserClient();
@@ -39,6 +39,8 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
       } catch (error) {
           console.error("Failed to parse teams", error);
       }
+
+      console.log(JSON.stringify(memberTeamsData) + " :memberTeamsData: ")
       
     return (
         <div className="w-[30%] ml-0 h-screen bg-[#F1F1F1] flex flex-col justify-between relative">
@@ -66,7 +68,7 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
                 <span className="text-base my-2">Member Teams</span>
                 <div className="overflow-y-scroll grid grid-cols-1 gap-1 px-2 h-1/2 items-left">
                 {
-                    memberTeamsData && memberTeamsData.length >0 ? memberTeamsData?.map((team, index) => (
+                    memberTeamsData.length >0 ? memberTeamsData?.map((team, index) => (
                         <Link className="h-fit" key={index} href={`/dashboard/team/${team.id}`}>
                         <Button variant="custom" className="text-left">
                             {team.name}

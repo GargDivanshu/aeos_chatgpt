@@ -30,7 +30,7 @@ export default async function DashboardLayout({
         //     ownerId: newUser.id,
         // });
     }
-    dbUser = await db.select().from(users).where(eq(users.email, authUser.email));
+    // dbUser = await db.select().from(users).where(eq(users.email, authUser.email));
     
     let all_owned_teams = await db.select().from(teams).where(eq(teams.ownerId, dbUser[0].id)).execute();
     const memberTeams = await db.select()
@@ -44,13 +44,13 @@ export default async function DashboardLayout({
         const teamIds = memberTeams.map(member => member.teamId);
 
   // Step 2: Get details of all teams with the collected team IDs
-   memberTeamsData = await db.select(teams)
-    .from(teams)
-    .where(inArray(teams.id, teamIds))
-    .execute();
+  //  memberTeamsData = await db.select(teams)
+  //   .from(teams)
+  //   .where(inArray(teams.id, teamIds))
+  //   .execute();
       }
 
-      console.log(JSON.stringify(memberTeamsData) + " :memberTeamsData: for " + dbUser[0].id)
+      // console.log(JSON.stringify(memberTeamsData) + " :memberTeamsData: for " + dbUser[0].id)
 
 
       let firstTeam = await db.select().from(teams).where(eq(teams.ownerId, dbUser[0].id)).execute();
@@ -59,7 +59,7 @@ export default async function DashboardLayout({
 
     return (
         <main className="flex min-h-screen flex-row">
-            <Sidebar all_owned_teams={all_owned_teams} userId={dbUser[0].id} balance={dbUser[0].balance} memberTeamsData={memberTeamsData} />
+            <Sidebar all_owned_teams={all_owned_teams} userId={dbUser[0].id} balance={dbUser[0].balance} memberTeamsData={memberTeams} />
         {/* Include shared UI here e.g. a header or sidebar */}
    
         {children}
