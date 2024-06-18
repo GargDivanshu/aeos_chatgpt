@@ -4,6 +4,7 @@ import React from 'react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { toast } from 'react-hot-toast';
+import {Button} from '@/components/ui/button'
 
 type Props = {
   dbUser: string;
@@ -53,15 +54,15 @@ export default function AddTeamForm({ dbUser }: Props) {
 
   return (
     <form onSubmit={handleSubmit}>
-      <div className="text-left shadow-md gap-6 rounded-lg absolute top-0 bottom-0 left-0 right-0 m-auto h-fit w-fit flex flex-col p-8">
-        <h1 className="text-2xl font-semibold text-center">This is your first team</h1>
-        <Label>Team Name</Label>
+      <div className="border border-input bg-background hover:text-accent-foreground text-left shadow-md rounded-lg text-left gap-6 absolute top-0 bottom-0 left-0 right-0 m-auto h-fit md:w-3/5 w-[90%] flex flex-col p-8">
+        <h1 className="text-2xl font-semibold text-center">Create Team</h1>
+        <Label className="md:text-xl">Team Name</Label>
         <Input value={teamName} onChange={(e) => setTeamName(e.target.value)} />
-        <Label>Conversation Name</Label>
+        <Label className="md:text-xl">Conversation Name</Label>
         <Input value={conversation} onChange={(e) => setConversation(e.target.value)} />
-        <button type="submit" className="mt-4 p-2 bg-blue-500 text-white rounded" disabled={loading}>
+        <Button variant="outline" type="submit" className="mt-4 p-2 text-center mx-auto w-fit" disabled={loading}>
           {loading ? 'Creating...' : 'Create Team'}
-        </button>
+        </Button>
       </div>
     </form>
   );

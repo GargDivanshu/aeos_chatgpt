@@ -11,7 +11,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
   } from "@/components/ui/tooltip"
-import {ShieldAlert} from 'lucide-react'
+import {ShieldAlert, MoveLeft} from 'lucide-react'
 
 
 type Props = {
@@ -46,6 +46,9 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
         <div className="w-[30%] ml-0 h-screen bg-[#F1F1F1] flex flex-col justify-between relative">
             <div className="text-3xl font-semibold p-4 h-full flex flex-col text-black_">
                 CollabGPT
+                <Link href="/dashboard">
+                <div ><MoveLeft /></div>
+                </Link>
                 <div className="h-4/5 flex flex-col">
                 <span className="text-base my-2">Owner Teams</span>
                 <div className="overflow-y-scroll grid grid-cols-1 gap-1 px-2 h-1/2 items-left">

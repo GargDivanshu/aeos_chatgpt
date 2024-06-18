@@ -66,7 +66,7 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
 
     if (!response.ok) {
       console.error('Failed to add member:');
-      toast.error('Failed to add member')
+      toast.error(`Failed to add member : ${response.error}`)
       return;
     }
 
