@@ -39,7 +39,7 @@ const Page = async ({ params: { conversationsId } }: Props) => {
 
   const teamId = getTeam[0].teamId;
 
-  const response = await fetch('/api/teamDetails', {
+  const response = await fetch(`${process.env.KINDE_SITE_URL}/api/teamDetails`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

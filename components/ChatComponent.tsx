@@ -23,7 +23,7 @@ const ChatComponent = ({ conversationsId, conversation_name }: Props) => {
   });
 
   const { input, handleInputChange, handleSubmit, messages } = useChat({
-    api: "/api/chat",
+    api: `${process.env.KINDE_SITE_URL}/api/chat`,
     body: {
       conversationsId, // Make sure this is being passed correctly
     },
