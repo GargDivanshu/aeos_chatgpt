@@ -5,7 +5,7 @@ import {
   import { type NextRequest } from 'next/server'
   
   export default function middleware(req: NextRequest) {
-    console.log(req + " :backend ")
+    // console.log(req + " :backend ")
     return withAuth(req);
   }
   

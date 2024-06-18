@@ -3,7 +3,7 @@ import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
 import { users, accounts, sessions, verificationTokens, teams, teamMembers, conversations, credits } from './schema'; // Ensure you import the users table schema
 
-neonConfig.fetchConnectionCache = true;
+// neonConfig.fetchConnectionCache = true;
 
 if (!process.env.DATABASE_URL) {
   throw new Error("database url not found");

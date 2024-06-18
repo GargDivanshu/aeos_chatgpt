@@ -19,6 +19,7 @@ import {
     // password: varchar('password').notNull(),
     emailConfirmed: boolean('email_confirmed').default(false),
     createdAt: timestamp('created_at').defaultNow().notNull(),
+    balance: integer('balance').default(10).notNull(),
   });
  
   
@@ -35,6 +36,8 @@ import {
     userId: integer('user_id').references(() => users.id),
     role: varchar('role').default('Member').notNull(),
   });
+
+  export type TeamMemberType = typeof all_owned_teams.$inferSelect
   
   export const conversations = pgTable('conversations', {
     id: serial('id').primaryKey(),
@@ -43,6 +46,14 @@ import {
     content: varchar('content').notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
   });
+
+  export const messages = pgTable('messages', {
+    id: serial('id').primaryKey(),
+    conversationId: integer('conversation_id').references(() => conversations.id).notNull(),
+    content: text('content').notNull(),
+    createdAt: timestamp('created_at').notNull().defaultNow(),
+    role: userSystemEnum('role').notNull(),
+});
   
   export const credits = pgTable('credits', {
     id: serial('id').primaryKey(),

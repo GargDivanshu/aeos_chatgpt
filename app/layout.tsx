@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+// import { DBUserProvider } from '@/context/DBUserContext';
+import Providers from "@/components/Providers";
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,12 +18,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
+    // <DBUserProvider>
     <html lang="en">
+      <Providers>
       <body 
       style={{
         backgroundImage: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)',
       }}
       className={inter.className}>{children}</body>
+      </Providers>
     </html>
+    // </DBUserProvider>
   );
 }
