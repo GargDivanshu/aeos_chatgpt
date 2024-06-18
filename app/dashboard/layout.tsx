@@ -32,7 +32,7 @@ export default async function DashboardLayout({
     }
     dbUser = await db.select().from(users).where(eq(users.email, authUser.email));
     
-    let all_owned_teams = db.select().from(teams).where(eq(teams.ownerId, dbUser[0].id)).execute();
+    let all_owned_teams = await db.select().from(teams).where(eq(teams.ownerId, dbUser[0].id)).execute();
     const memberTeams = await db.select()
     .from(teamMembers)
     .where(eq(teamMembers.userId, dbUser[0].id))
@@ -54,24 +54,15 @@ export default async function DashboardLayout({
 
 
       let firstTeam = await db.select().from(teams).where(eq(teams.ownerId, dbUser[0].id)).execute();
-    // if(firstTeam.length > 0) {
-    //     console.log(firstTeam + " :firstTeam: ")
-    //     firstTeam = firstTeam[0];
-    //     redirect(`/dashboard/team/${firstTeam?.id}`)
-    // }
 
 
 
     return (
-        // <UserProvider>
-        <>
         <main className="flex min-h-screen flex-row">
             <Sidebar all_owned_teams={all_owned_teams} userId={dbUser[0].id} balance={dbUser[0].balance} memberTeamsData={memberTeamsData} />
         {/* Include shared UI here e.g. a header or sidebar */}
    
         {children}
       </main>
-      </>
-      // </UserProvider>
     )
   }

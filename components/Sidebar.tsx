@@ -67,8 +67,8 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
                 <div className="overflow-y-scroll grid grid-cols-1 gap-1 px-2 h-1/2 items-left">
                 {
                     memberTeamsData && memberTeamsData.length >0 ? memberTeamsData?.map((team, index) => (
-                        <Link key={index} href={`/dashboard/team/${team.id}`}>
-                        <Button variant="outline" className="text-left">
+                        <Link className="h-fit" key={index} href={`/dashboard/team/${team.id}`}>
+                        <Button variant="custom" className="text-left">
                             {team.name}
                         </Button>
                         </Link>

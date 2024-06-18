@@ -1,7 +1,9 @@
-import { clerkMiddleware } from "@clerk/nextjs/server";
+import {withAuth} from "@kinde-oss/kinde-auth-nextjs/middleware";
 
-export default clerkMiddleware();
+export default withAuth(async function middleware(req) {
+  console.log("look at me", req.kindeAuth);
+});
 
 export const config = {
-  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
+  matcher: ["/dashboard"]
 };

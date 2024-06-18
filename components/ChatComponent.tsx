@@ -70,8 +70,8 @@ const ChatComponent = ({ conversationsId, conversation_name }: Props) => {
             placeholder="Ask any question..."
             className="w-full"
           />
-          <Button className="bg-[#0F172A] ml-2">
-            <Send className="h-4 w-4" />
+          <Button className="bg-[#858585] ml-2 flex items-center">
+            <Send className="h-4 w-4 text-white" />
           </Button>
         </div>
       </form>

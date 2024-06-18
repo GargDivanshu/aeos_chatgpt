@@ -14,49 +14,13 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import {Button} from '@/components/ui/button'
 import {RegisterLink, LoginLink, LogoutLink} from "@kinde-oss/kinde-auth-nextjs/components";
 import {useKindeBrowserClient} from "@kinde-oss/kinde-auth-nextjs";
 
 
 
 
-const components: { title: string; href: string; description: string }[] = [
-  {
-    title: "Alert Dialog",
-    href: "/docs/primitives/alert-dialog",
-    description:
-      "A modal dialog that interrupts the user with important content and expects a response.",
-  },
-  {
-    title: "Hover Card",
-    href: "/docs/primitives/hover-card",
-    description:
-      "For sighted users to preview content available behind a link.",
-  },
-  {
-    title: "Progress",
-    href: "/docs/primitives/progress",
-    description:
-      "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-  },
-  {
-    title: "Scroll-area",
-    href: "/docs/primitives/scroll-area",
-    description: "Visually or semantically separates content.",
-  },
-  {
-    title: "Tabs",
-    href: "/docs/primitives/tabs",
-    description:
-      "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-  },
-  {
-    title: "Tooltip",
-    href: "/docs/primitives/tooltip",
-    description:
-      "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-  },
-]
 
 export default function Navbar() {
 
@@ -64,25 +28,27 @@ export default function Navbar() {
   const {user} = useKindeBrowserClient();
 
   return (
-    <NavigationMenu>
-      <NavigationMenuList>
+    <NavigationMenu >
+      <NavigationMenuList className="gap-x-4">
         {!user ? 
-        (<div>
-        <NavigationMenuItem>
+        (<div className="flex items-right">
+        <NavigationMenuItem className="mx-4">
+          <Button className="bg-[#ECECEC]">
         <LoginLink postLoginRedirectURL="/dashboard">Sign in</LoginLink> 
+        </Button>
         </NavigationMenuItem>
 
-        <NavigationMenuItem>
+        <NavigationMenuItem >
+          <Button className="bg-[#ECECEC]">
             <RegisterLink postLoginRedirectURL="/dashboard">Sign up</RegisterLink>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-            <LogoutLink>Log out</LogoutLink>        
+          </Button>
         </NavigationMenuItem>
         </div>)
         :
         <NavigationMenuItem>
-            <LogoutLink>Log out</LogoutLink>        
+          <Button className="bg-[#ECECEC]">
+            <LogoutLink>Log out</LogoutLink> 
+          </Button>  
         </NavigationMenuItem>
         }
       </NavigationMenuList>

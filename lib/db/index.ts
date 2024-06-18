@@ -1,30 +1,33 @@
 // db/index.ts
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { users, accounts, sessions, verificationTokens, teams, teamMembers, conversations, credits } from './schema'; // Ensure you import the users table schema
+import { users, accounts, sessions, verificationTokens, teams, teamMembers, conversations, credits } from './schema';
 
-// neonConfig.fetchConnectionCache = true;
 
 if (!process.env.DATABASE_URL) {
-  throw new Error("database url not found");
+  throw new Error("DATABASE_URL not found");
 }
 
-const sql = neon(process.env.DATABASE_URL);
-export const db = drizzle(sql);
-
-// Implement getUser function
-export async function getUser(email: string) {
-  try {
-    const user = await db.select().from(users).where(users.email.equals(email)).execute();
-    if (user.length === 0) {
-      return null;
+const connectWithRetry = async (retries = 5, delay = 1000): Promise<any> => {
+  for (let attempt = 1; attempt <= retries; attempt++) {
+    try {
+      const sql = neon(process.env.DATABASE_URL, { timeout: 5000 }); // Set a 5 seconds timeout for connection
+      const db = drizzle(sql);
+      // Check connection by performing a simple query
+      await db.select().from(users).limit(1).execute();
+      console.log('Database connection established');
+      return db;
+    } catch (error) {
+      console.error(`Database connection failed on attempt ${attempt}. Retrying in ${delay}ms...`, error);
+      if (attempt < retries) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      } else {
+        throw new Error('Failed to connect to database after multiple attempts');
+      }
     }
-    return user[0];
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    return null;
   }
-}
+};
 
-// Ensure to export other relevant entities
-export { users, teams, teamMembers, conversations, credits };
+const db = await connectWithRetry();
+
+export { db, users, teams, teamMembers, conversations, credits };
