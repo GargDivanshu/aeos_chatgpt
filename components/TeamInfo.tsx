@@ -6,6 +6,9 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import  Link  from 'next/link';
 import { User, PenLine } from 'lucide-react'
+import { Badge } from "@/components/ui/badge"
+
+
 
 const TeamInfo = ({ teamData, teamId, userIdFromDb }) => {
   const [conversations, setConversations] = useState(teamData.conversations);
@@ -58,14 +61,14 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb }) => {
     setMembers([...members, newMember]); // Assuming newMember contains the member details
   };
 
-  const { ownerName, ownerEmail, memberEmails, role } = teamData;
+  const { team_name, ownerName, ownerEmail, memberEmails, role } = teamData;
   console.log(JSON.stringify(teamData) + " ::conversations")
 
   return (
     <div className="container text-center relative">
       {/* Render static parts here */}
       <div className="border border-input bg-background hover:text-accent-foreground text-left shadow-md gap-2 rounded-lg absolute top-0 bottom-0 left-0 right-0 m-auto h-fit w-4/5 flex flex-col p-8">
-      <h1 className="md:text-2xl text-3xl text-center font-semibold">Team Information</h1>
+      <h1 className="md:text-2xl text-3xl text-center font-semibold">{team_name}</h1>
 
       <div className="flex flex-row gap-x-2 items-center">
       <User size={30} />
@@ -94,10 +97,10 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb }) => {
         </div>
       </form>
 
-      <h2 className="md:text-xl font-semibold">Members</h2>
+      <h2 className="md:text-xl font-semibold flex ">Members</h2>
       <ul>
-        {members.map((member) => (
-          <li key={member.id}>{member.name} hi</li> // Assuming member object has id and name properties
+        {members.map((member, index) => (
+          <Badge key={member.id}>{member.email}</Badge> // Assuming member object has id and name properties
         ))}
       </ul>
       <form onSubmit={handleAddMember}>

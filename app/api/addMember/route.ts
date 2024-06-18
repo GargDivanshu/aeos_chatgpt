@@ -1,5 +1,5 @@
 import { db } from '@/lib/db';
-import { conversations, teamMembers } from '@/lib/db/schema';
+import { conversations, teamMembers, users} from '@/lib/db/schema';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
@@ -14,14 +14,18 @@ export async function POST(req: Request, res: Response) {
     }
 
     try {
-        const { email, teamId } = req.body;
+        const body = await req.json(); // Parse the JSON body
+        const { email, teamId } = body;
+        console.log(email + " :addmember email")
+        console.log(teamId + " :addmember teamId")
+
         // if (!email) {
         //   return NextResponse.json({ error: 'Email is required' }, { status: 400 }); // Changed to 400 for bad request
         // }
 
         // Find the user by email
-        const userQuery = db.select().from(users).where(eq(users.email, email));
-        const userResult = await userQuery.execute();
+        const userResult = await db.select().from(users).where(eq(users.email, email)).execute();
+        console.log(JSON.stringify(userResult))
         if (userResult.length === 0) {
           return NextResponse.json({ error: 'User not found' }, { status: 404 }); // Changed to 404 for not found
         }

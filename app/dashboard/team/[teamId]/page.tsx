@@ -21,7 +21,7 @@ const Page = async ({ params: { teamId } }: Props) => {
   const isAuth = isAuthenticated();
   if (!isAuth) redirect('/');
 
-  const dbUser = await db.select().from(users).where(eq(users.email, userId.email)).execute();
+  const dbUser = await db.select().from(users).where(eq(users.email, userId?.email)).execute();
   if (!dbUser || dbUser.length === 0) {
     return redirect('/');
   }

@@ -5,6 +5,8 @@ import { eq } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import React from "react";
 import ChatComponent from '@/components/ChatComponent';
+import {toast} from 'react-hot-toast'
+
 
 type Props = {
   params: {
@@ -27,8 +29,13 @@ const Page = async ({ params: { conversationsId } }: Props) => {
 
   const getTeam = await db.select({ teamId: conversations.teamId }).from(conversations).where(eq(conversations.id, conversationsId)).execute();
   if (getTeam.length === 0) {
+    toast("some err occured")
     return redirect('/dashboard');
   }
+
+  let conversation_name = await db.select().from(conversations).where(eq(conversations.id, conversationsId)).execute()
+  conversation_name = conversation_name[0].content; 
+
 
   const teamId = getTeam[0].teamId;
 
@@ -47,7 +54,7 @@ const Page = async ({ params: { conversationsId } }: Props) => {
 
   return (
     <React.Fragment>
-      <ChatComponent conversationsId={parseInt(conversationsId)} />
+      <ChatComponent conversationsId={parseInt(conversationsId)} conversation_name={conversation_name} />
     </React.Fragment>
   );
 };

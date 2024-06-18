@@ -9,7 +9,6 @@ import { redirect } from 'next/navigation'
 export default async function Home() {
 
   const {getUser, isAuthenticated} = getKindeServerSession()
-  console.log("isauth: " + isAuthenticated + " :getIser: " + getUser)
   return (
     <main className="flex min-h-screen flex-col items-center md:px-64 ">
       <Navbar/>

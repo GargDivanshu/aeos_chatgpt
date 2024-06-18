@@ -9,9 +9,9 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Message } from "ai";
 
-type Props = { conversationsId: number };
+type Props = { conversationsId: number; conversation_name: string; };
 
-const ChatComponent = ({ conversationsId }: Props) => {
+const ChatComponent = ({ conversationsId, conversation_name }: Props) => {
   const { data, isLoading } = useQuery({
     queryKey: ["chat", conversationsId],
     queryFn: async () => {
@@ -32,12 +32,10 @@ const ChatComponent = ({ conversationsId }: Props) => {
 
   // Debugging to ensure conversationsId is being passed
   React.useEffect(() => {
-    console.log("Conversations ID:", conversationsId);
   }, [conversationsId]);
 
   // Debugging to ensure messages are being updated
   React.useEffect(() => {
-    console.log("Messages updated:", messages);
   }, [messages]);
 
   // Auto-scroll to the bottom of the message list
@@ -52,10 +50,10 @@ const ChatComponent = ({ conversationsId }: Props) => {
   }, [messages]);
 
   return (
-    <div className="relative max-h-screen w-full" id="message-container">
+    <div className="relative h-screen w-full" id="message-container">
       {/* header */}
       <div className="sticky top-0 inset-x-0 p-2 bg-white h-fit">
-        <h3 className="text-xl font-bold">Chat</h3>
+        <h3 className="text-xl font-bold">Chat - {conversation_name}</h3>
       </div>
 
       {/* message list */}
@@ -63,7 +61,7 @@ const ChatComponent = ({ conversationsId }: Props) => {
 
       <form
         onSubmit={handleSubmit}
-        className="sticky bottom-0 inset-x-0 px-2 py-4 bg-white"
+        className="absolute bottom-0 inset-x-0 px-2 py-4 bg-white"
       >
         <div className="flex">
           <Input

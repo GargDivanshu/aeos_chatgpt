@@ -28,6 +28,7 @@ export async function POST(req: Request) {
         }
 
         const team = teamDetails[0];
+        const team_name = teamDetails[0].name; 
 
         // Fetch the owner details
         const ownerDetails = await db.select()
@@ -60,18 +61,24 @@ export async function POST(req: Request) {
 
         // Fetch the team members and their names and emails
         const memberDetails = await db.select({
-                userId: teamMembers.userId,
-                userName: users.name,
-                userEmail: users.email
-            })
-            .from(teamMembers)
-            .leftJoin(users, eq(teamMembers.userId, users.id))
-            .where(eq(teamMembers.teamId, teamId))
-            .where(eq(teamMembers.role, 'Member'))
-            .execute();
+            userId: teamMembers.userId,
+            userName: users.name,
+            userEmail: users.email
+        })
+        .from(teamMembers)
+        .leftJoin(users, eq(teamMembers.userId, users.id))
+        .where(eq(teamMembers.teamId, teamId))
+        .where(eq(teamMembers.role, 'Member'))
+        .execute();
 
-        const memberNames = memberDetails.map(member => member.userName);
-        const memberEmails = memberDetails.map(member => member.userEmail);
+        const formattedMembers = memberDetails
+        .filter(member => member.userId !== team.ownerId) // Ensure the owner is not included
+        .map(member => ({
+            id: member.userId,
+            name: member.userName,
+            email: member.userEmail
+        }));
+
 
         // Fetch the conversations associated with the team
         const conversationsDetails = await db.select()
@@ -84,17 +91,18 @@ export async function POST(req: Request) {
             content: convo.content
         }));
 
-        // const formattedMembers = 
-
         // Construct the response
         const response = {
+            teamId,
+            team_name,
             ownerName,
             ownerEmail,
-            members: memberNames,
-            memberEmails,
+            members: formattedMembers,
             conversations: formattedConversations,
             role: userRole
         };
+
+        console.log(JSON.stringify(response) + " :teamDetails -- response")
 
         return NextResponse.json(response);
     } catch (err) {

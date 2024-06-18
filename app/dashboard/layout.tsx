@@ -18,14 +18,12 @@ export default async function DashboardLayout({
     if(!authUser) redirect('/')
     
     let dbUser = await db.select().from(users).where(eq(users.email, authUser.email));
-    console.log(dbUser + " :dbUser")
     let newUser;
     if(!dbUser || dbUser.length == 0) {
         newUser = await db.insert(users).values({
             name: authUser.given_name + " " + authUser.family_name,
             email: authUser.email,
         });
-        console.log(JSON.stringify(newUser + " newuser : "))
 
         // const newTeam = await db.insert(teams).values({
         //     name: 'Your First Team',
@@ -33,7 +31,6 @@ export default async function DashboardLayout({
         // });
     }
     dbUser = await db.select().from(users).where(eq(users.email, authUser.email));
-    console.log(JSON.stringify(dbUser) + " :dbuser again : ")
     
     let all_owned_teams = db.select().from(teams).where(eq(teams.ownerId, dbUser[0].id)).execute();
     const memberTeams = await db.select()
@@ -41,7 +38,6 @@ export default async function DashboardLayout({
     .where(eq(teamMembers.userId, dbUser[0].id))
     .where(eq(teamMembers.role, 'Member'))
     .execute();  
-    console.log(memberTeams + " :memberTeams")  
 
     let memberTeamsData; 
     if (memberTeams.length > 0) {
@@ -54,19 +50,15 @@ export default async function DashboardLayout({
     .execute();
       }
 
+      console.log(JSON.stringify(memberTeamsData) + " :memberTeamsData: for " + dbUser[0].id)
+
 
       let firstTeam = await db.select().from(teams).where(eq(teams.ownerId, dbUser[0].id)).execute();
-    console.log(JSON.stringify(firstTeam) + " :firstTeam before provessing")
     // if(firstTeam.length > 0) {
     //     console.log(firstTeam + " :firstTeam: ")
     //     firstTeam = firstTeam[0];
     //     redirect(`/dashboard/team/${firstTeam?.id}`)
     // }
-
-      
-
-    console.log(memberTeamsData, " :TeamsData")
-    console.log(all_owned_teams + " :all_owned_team")
 
 
 

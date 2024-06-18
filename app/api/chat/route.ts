@@ -15,12 +15,10 @@ export const runtime = "edge";
 export async function POST(req: Request) {
   try {
     const { messages: userMessages, conversationsId } = await req.json();
-    console.log(JSON.stringify(userMessages) +  " :messages " + conversationsId + " : conversationsId :")
 
     // Verify the conversation exists
     const conversation = await db.select().from(conversations).where(eq(conversations.id, conversationsId)).execute();
     if (conversation.length !== 1) {
-      console.error("Conversation not found:", conversationsId);
       return NextResponse.json({ error: "Conversation not found" }, { status: 404 });
     }
 

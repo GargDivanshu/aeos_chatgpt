@@ -3,10 +3,10 @@ import { db } from '@/lib/db';
 import { teams, conversations, teamMembers, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
 
-export async function createTeam(formData: FormData) {
-  const team_name = formData.get('team_name') as string;
-  const owner_id = parseInt(formData.get('owner_id') as string, 10);
-  const conversation_name = formData.get('conversation_name') as string;
+export async function createTeam(team_name: string, owner_id: string, conversation_name: string) {
+  // const team_name = formData?.get('team_name') as string;
+  // const owner_id = parseInt(formData?.get('owner_id') as string, 10);
+  // const conversation_name = formData?.get('conversation_name') as string;
 
   if (!team_name || isNaN(owner_id)) {
     throw new Error('Invalid team name or owner ID');
@@ -18,7 +18,6 @@ export async function createTeam(formData: FormData) {
     .where(eq(users.id, owner_id))
     .execute();
 
-  console.log('db_user:', db_user);
 
   if (db_user.length === 0) {
     throw new Error('User not found');
@@ -34,7 +33,6 @@ export async function createTeam(formData: FormData) {
     ownerId: owner_id,
   }).returning({id: teams.id}).execute();
 
-  console.log('created_team:', created_team);
 
   // Ensure created_team is not empty
   if (created_team.length === 0) {
@@ -43,7 +41,6 @@ export async function createTeam(formData: FormData) {
 
   // Extract the created team data
   const created_team_data = created_team[0];
-  console.log('created_team_data:', created_team_data);
 
   // Insert the default conversation
   const default_chat = await db.insert(conversations).values({
@@ -52,7 +49,6 @@ export async function createTeam(formData: FormData) {
     teamId: created_team_data.id,
   }).returning({id: conversations.id}).execute();
 
-  console.log('default_chat:', default_chat);
 
   // Ensure default_chat is not empty
   if (default_chat.length === 0) {
@@ -74,7 +70,6 @@ export async function createTeam(formData: FormData) {
     role: "Owner"
   }).returning({id: teamMembers.id}).execute();
 
-  console.log('owner_team:', owner_team);
 
   // Ensure owner_team is not empty
   if (owner_team.length === 0) {

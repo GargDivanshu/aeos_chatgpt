@@ -27,8 +27,6 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
         user,
       } = useKindeBrowserClient();
 
-      console.log(user)
-      console.log(JSON.stringify(all_owned_teams) + " all_owned_teams")
       let parsedTeams: TeamMemberType[] = [];
       try {
           // Check if all_owned_teams has a value property
@@ -41,9 +39,6 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
       } catch (error) {
           console.error("Failed to parse teams", error);
       }
-  
-      console.log("Parsed teams data:", parsedTeams);
-
       
     return (
         <div className="w-[30%] ml-0 h-screen bg-[#F1F1F1] flex flex-col justify-between relative">
@@ -52,16 +47,19 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
                 <div className="h-4/5 flex flex-col">
                 <span className="text-base my-2">Owner Teams</span>
                 <div className="overflow-y-scroll grid grid-cols-1 gap-1 px-2 h-1/2 items-left">
-                {parsedTeams?.map((team, index) => (
-                    <Link key={index} href={`/dashboard/team/${team.id}`}>
+                { parsedTeams && parsedTeams.length >0 ? parsedTeams?.map((team, index) => (
+                    <Link className="h-fit" key={index} href={`/dashboard/team/${team.id}`}>
                            <Button variant="custom" key={index} className="text-left" >
                             {team.name}
                            </Button>
                     </Link>
-                            // <Button >
-                            //     
-                            // </Button>
-                        ))}
+                        ))
+                    :
+                    <div>
+                    <ShieldAlert size={30} className="m-auto"/>
+                    <div className="text-xs text-center">You haven&apos;t created any team yet</div>
+                    </div>
+                    }
                 </div>
 
 
@@ -69,12 +67,15 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
                 <div className="overflow-y-scroll grid grid-cols-1 gap-1 px-2 h-1/2 items-left">
                 {
                     memberTeamsData && memberTeamsData.length >0 ? memberTeamsData?.map((team, index) => (
-                        <Button key={index} className="text-left" name={team.name}>
-                           </Button>
+                        <Link key={index} href={`/dashboard/team/${team.id}`}>
+                        <Button variant="outline" className="text-left">
+                            {team.name}
+                        </Button>
+                        </Link>
                     )) : 
                     <div>
                     <ShieldAlert size={30} className="m-auto"/>
-                    <div className="text-xs text-center">You are not a member of anyone's Team</div>
+                    <div className="text-xs text-center">You are not a member of anyone&apos;s Team</div>
                     </div>
                 }
                 </div>
