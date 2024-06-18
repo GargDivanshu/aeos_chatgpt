@@ -40,7 +40,7 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
           console.error("Failed to parse teams", error);
       }
 
-      console.log(JSON.stringify(memberTeamsData) + " :memberTeamsData: ")
+      console.log(JSON.stringify(parsedTeams) + " :parsedTeams: ")
       
     return (
         <div className="w-[30%] ml-0 h-screen bg-[#F1F1F1] flex flex-col justify-between relative">

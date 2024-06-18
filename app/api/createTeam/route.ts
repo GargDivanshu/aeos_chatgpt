@@ -1,23 +1,37 @@
-// /pages/api/createTeam.ts
-import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db';
 import { teams, conversations, teamMembers, users } from '@/lib/db/schema';
 import { eq } from 'drizzle-orm';
+import { NextResponse } from 'next/server';
+import Queue from 'bull';
 
-export async function POST(req: NextApiRequest, res: NextApiResponse) {
+const emailQueue = new Queue('emailQueue', {
+  redis: {
+    host: process.env.REDIS_HOST,
+    port: Number(process.env.REDIS_PORT),
+    password: process.env.REDIS_PASSWORD,
+    tls: {},
+  },
+});
+
+export async function POST(req: Request) {
   if (req.method !== 'POST') {
     return NextResponse.json({ error: 'Method not Allowed' }, { status: 405 });
-    return;
-  }
-
-  const { team_name, owner_id, conversation_name } = req.body;
-
-  if (!team_name || !owner_id || !conversation_name) {
-    return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
-    return;
   }
 
   try {
+    const body = await req.json();
+    console.log(JSON.stringify(body) + " :req.json");
+
+    const { team_name, owner_id, conversation_name } = body;
+
+    console.log(team_name + " :team_name");
+    console.log(owner_id + " :owner_id");
+    console.log(conversation_name + " :conversation_name");
+
+    if (!team_name || !owner_id || !conversation_name) {
+      return NextResponse.json({ error: 'Invalid input' }, { status: 400 });
+    }
+
     const db_user = await db.select(users)
       .from(users)
       .where(eq(users.id, owner_id))
@@ -25,12 +39,10 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
 
     if (db_user.length === 0) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
-      return;
     }
 
     if (db_user[0].balance === 0) {
       return NextResponse.json({ error: 'Insufficient credits' }, { status: 403 });
-      return;
     }
 
     const created_team = await db.insert(teams).values({
@@ -54,6 +66,14 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
       throw new Error('Failed to create default conversation');
     }
 
+    if (db_user[0].balance === 1) {
+      await emailQueue.add({
+        to: db_user[0].email,
+        subject: 'Credits Depleted',
+        text: 'Your credits have been depleted. Please purchase more credits.',
+      });
+    }
+
     await db.update(users)
       .set({ balance: db_user[0].balance - 1 })
       .where(eq(users.id, owner_id))
@@ -70,13 +90,12 @@ export async function POST(req: NextApiRequest, res: NextApiResponse) {
     }
 
     return NextResponse.json({
-        team: { id: created_team_data.id, name: created_team_data.name },
-        conversation: { id: default_chat[0].id, name: default_chat[0].content }
-      }, { status: 200 });
+      team: { id: created_team_data.id, name: created_team_data.name },
+      conversation: { id: default_chat[0].id, name: default_chat[0].content }
+    }, { status: 200 });
 
   } catch (error) {
     console.error(error);
-    
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
 }

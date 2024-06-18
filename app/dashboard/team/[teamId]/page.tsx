@@ -32,7 +32,7 @@ const Page = async ({ params: { teamId } }: Props) => {
   const userEmailFromDb = dbUser[0].email;
 
   try {
-    const response = await axios.post('http://localhost:3000/api/teamDetails', {
+    const response = await axios.post('/api/teamDetails', {
       teamId,
       user_id: userIdFromDb
     });

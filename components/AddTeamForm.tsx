@@ -21,6 +21,10 @@ export default function AddTeamForm({ dbUser }: Props) {
     setLoading(true);
 
     try {
+      console.log("----")
+      console.log(teamName)
+      console.log(dbUser)
+      console.log(conversation)
       const response = await fetch('/api/createTeam', {
         method: 'POST',
         headers: {
@@ -35,7 +39,7 @@ export default function AddTeamForm({ dbUser }: Props) {
 
       if (!response.ok) {
         const errorData = await response.json();
-        toast.error(errorData.message || 'Failed to create team');
+        toast.error(errorData.error || 'Failed to create team');
         setLoading(false);
         return;
       }
