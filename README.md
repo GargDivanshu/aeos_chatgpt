@@ -3,6 +3,9 @@
 
 https://github.com/GargDivanshu/aeos_chatgpt/assets/96184674/d3ddf28c-2de6-41d2-883b-e52396cb3520
 
+https://github.com/GargDivanshu/aeos_chatgpt/assets/96184674/63a8e29c-9e75-4449-88a6-51bc9f6c4d0c
+
+https://github.com/GargDivanshu/aeos_chatgpt/assets/96184674/e6ae55ce-010b-4706-b5ae-f94aa53144fc
 
 
 
