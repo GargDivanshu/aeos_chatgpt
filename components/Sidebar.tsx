@@ -27,20 +27,20 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
         user,
       } = useKindeBrowserClient();
 
-      let parsedTeams: TeamMemberType[] = [];
-      try {
-          // Check if all_owned_teams has a value property
-          if (all_owned_teams?.value) {
-              // Parse the JSON string in the value property
-              parsedTeams = JSON.parse(all_owned_teams.value);
-          } else {
-              parsedTeams = all_owned_teams; // If it's already an array/object, assign directly
-          }
-      } catch (error) {
-          console.error("Failed to parse teams", error);
-      }
+      const [parsedTeam, setParsedTeam] = React.useState<TeamMemberType[]>([])
 
-      console.log(JSON.stringify(parsedTeams) + " :parsedTeams: ")
+      React.useEffect(() => {
+// Check if all_owned_teams has a value property
+if (all_owned_teams?.value) {
+    // Parse the JSON string in the value property
+    setParsedTeam(JSON.parse(all_owned_teams.value))
+} else {
+    setParsedTeam(all_owned_teams) // If it's already an array/object, assign directly
+}
+      }, [all_owned_teams])
+          
+     
+
       
     return (
         <div className="w-[30%] ml-0 h-screen bg-[#F4F4F5] md:flex hidden flex-col justify-between relative border-r-[1px] border-[#6B6B6D]">
@@ -52,7 +52,7 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
                 <div className="h-4/5 flex flex-col">
                 <span className="text-base my-2">Owner Teams</span>
                 <div className="overflow-y-scroll grid grid-cols-1 px-2 h-1/2 items-left">
-                { parsedTeams && parsedTeams.length >0 ? parsedTeams?.map((team, index) => (
+                { parsedTeam && parsedTeam?.length >0 ? parsedTeam?.map((team, index) => (
                     <Link className="h-fit flex justify-center" key={index} href={`/dashboard/team/${team.id}`}>
                            <Button variant="custom" key={index} className="text-left" >
                             {team.name}

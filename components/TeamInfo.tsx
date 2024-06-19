@@ -130,7 +130,7 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
           </Link>
         ))}
       </ul>
-      { userEmailFromDb === ownerEmail ? 
+      
       <form onSubmit={handleSubmit} className="my-4">
         <Label htmlFor="conversationTitle">New Conversation Title</Label>
         <div className="flex md:flex-row flex-col gap-x-2 md:gap-y-0 gap-y-2 md:p-0 py-4">
@@ -142,7 +142,7 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
         className="md:w-1/4 w-full text-center"
         type="submit">Create Conversation</Button>
         </div>
-      </form> : null}
+      </form>
 
       <h2 className="md:text-xl font-semibold flex flex-wrap">Members</h2>
       <ul>
