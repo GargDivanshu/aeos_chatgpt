@@ -45,7 +45,7 @@ export default function Sidebar({all_owned_teams, userId, balance, memberTeamsDa
     return (
         <div className="w-[30%] ml-0 h-screen bg-[#F1F1F1] flex flex-col justify-between relative">
             <div className="text-3xl font-semibold p-4 h-full flex flex-col text-black_">
-                CollabGPT
+                <Link href="/">CollabGPT</Link>
                 <Link href="/dashboard">
                 <div ><MoveLeft /></div>
                 </Link>

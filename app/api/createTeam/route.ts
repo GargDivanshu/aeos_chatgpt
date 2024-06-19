@@ -50,9 +50,9 @@ export async function POST(req: Request) {
       ownerId: owner_id,
     }).returning({ id: teams.id, name: teams.name }).execute();
 
-    if (created_team.length === 0) {
-      throw new Error('Failed to create team');
-    }
+    // if (!created_team) {
+    //   throw new Error('Failed to create team');
+    // }
 
     const created_team_data = created_team[0];
 
@@ -62,9 +62,9 @@ export async function POST(req: Request) {
       teamId: created_team_data.id,
     }).returning({ id: conversations.id, content: conversations.content }).execute();
 
-    if (default_chat.length === 0) {
-      throw new Error('Failed to create default conversation');
-    }
+    // if (!default_chat) {
+    //   throw new Error('Failed to create default conversation');
+    // }
 
     if (db_user[0].balance === 1) {
       await emailQueue.add({

@@ -18,6 +18,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import toast from 'react-hot-toast'
+import axios from 'axios'
 
 
 
@@ -33,7 +34,7 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
     event.preventDefault();
     const conversationTitle = convoTitle; // Directly use the state
 
-    const response = await fetch(`${process.env.KINDE_SITE_URL}/api/createConversations`, {
+    const response = await fetch(`/api/createConversations`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -43,7 +44,7 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
 
     if (!response.ok) {
       console.error('Failed to create conversation:', response.statusText);
-      toast.error('Failed to create conversation:', response.statusText)
+      // toast.error('Failed to create conversation:', response.statusText)
       return;
     }
 
@@ -56,7 +57,7 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
     event.preventDefault();
     // No need to create FormData here since you're managing state
 
-    const response = await fetch(`${process.env.KINDE_SITE_URL}/api/addMember`, {
+    const response = await fetch(`/api/addMember`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -82,7 +83,7 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
     }
 
     try {
-        const response = await fetch(`${process.env.KINDE_SITE_URL}/api/deleteMember`, {
+        const response = await fetch(`/api/deleteMember`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

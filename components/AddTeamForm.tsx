@@ -5,6 +5,8 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { toast } from 'react-hot-toast';
 import {Button} from '@/components/ui/button'
+import axios from 'axios';
+
 
 type Props = {
   dbUser: string;
@@ -25,32 +27,26 @@ export default function AddTeamForm({ dbUser }: Props) {
       console.log(teamName)
       console.log(dbUser)
       console.log(conversation)
-      const response = await fetch('/api/createTeam', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
+      const response = await axios.post('/api/createTeam', {
           team_name: teamName,
           owner_id: dbUser,
           conversation_name: conversation
-        }),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        toast.error(errorData.error || 'Failed to create team');
-        setLoading(false);
-        return;
-      }
+      // if (!response.ok) {
+      //   const errorData = await response.json();
+      //   toast.error(errorData.error || 'Failed to create team');
+      //   setLoading(false);
+      //   return;
+      // }
 
       const data = await response.json();
-      toast.success("Team creation done, you will be redirected");
+      toast.success("Team creation done");
       console.log('Created Team and Conversation:', data);
       // Redirect or update UI as needed
     } catch (error) {
       console.error('Failed to create team:', error);
-      toast.error('Failed to create team');
+      // toast.error('Failed to create team');
     } finally {
       setLoading(false);
     }

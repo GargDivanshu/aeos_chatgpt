@@ -32,6 +32,20 @@ export async function POST(req: Request, res: Response) {
 
         const userId = userResult[0].id;
 
+        // if(user.email === userResult[0].email) {
+        //     return NextResponse.json({error: 'You cannot add yourself!'}, {status: 401})
+        // }
+
+        const existingMemberResult = await db.select()
+            .from(teamMembers)
+            .where(eq(teamMembers.teamId, teamId)) 
+            .where(eq(teamMembers.userId, userId))
+            .execute();
+
+        if (existingMemberResult.length > 0) {
+            return NextResponse.json({ error: 'User is already a member of the team' }, { status: 409 }); 
+        }
+
         // Prepare the data for inserting into the teamMembers table
         const newMember = {
           teamId: teamId,
