@@ -14,19 +14,7 @@ export const runtime = "edge";
 
 export async function POST(req: Request) {
   try {
-    // Log to ensure the request is correctly parsed
-    const requestBody = await req.json();
-    console.log("Request Body:", requestBody);
-
-    const { messages: userMessages, conversationsId } = requestBody;
-
-    // Validate the incoming data
-    if (!userMessages || !Array.isArray(userMessages)) {
-      throw new Error("Invalid userMessages");
-    }
-    if (!conversationsId) {
-      throw new Error("Invalid conversationsId");
-    }
+    const { messages: userMessages, conversationsId } = await req.json();
 
     // Verify the conversation exists
     const conversation = await db.select().from(conversations).where(eq(conversations.id, conversationsId)).execute();
@@ -51,9 +39,6 @@ export async function POST(req: Request) {
       stream: true,
     });
 
-    // Log to ensure the response is received
-    console.log("OpenAI Response:", response);
-
     // Create a stream for OpenAI response
     const stream = OpenAIStream(response, {
       onStart: async () => {
@@ -64,7 +49,7 @@ export async function POST(req: Request) {
           role: "user",
         }).execute();
       },
-      onCompletion: async (completion) => {
+      onCompletion: async (completion: string) => {
         // Save the AI's response to the database
         await db.insert(messages).values({
           conversationId: conversationsId,
@@ -75,14 +60,8 @@ export async function POST(req: Request) {
     });
 
     return new StreamingTextResponse(stream);
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error in chat API:", error);
-
-    return new Response(JSON.stringify({ error: error.message || "Internal Server Error" }), {
-      status: 500,
-      headers: {
-        "content-type": "application/json",
-      },
-    });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

@@ -23,6 +23,7 @@ import {
   });
  
   
+  
   export const teams = pgTable('teams', {
     id: serial('id').primaryKey(),
     name: varchar('name').notNull(),
