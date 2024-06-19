@@ -1,6 +1,6 @@
 import { db } from '@/lib/db';
 import { teams, conversations, teamMembers, users } from '@/lib/db/schema';
-import { eq } from 'drizzle-orm';
+import { eq, inArray } from 'drizzle-orm';
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { NextResponse } from 'next/server';
 
@@ -23,6 +23,8 @@ export async function POST(req: Request) {
             .where(eq(teams.id, teamId))
             .execute();
 
+        console.log(JSON.stringify(teamDetails) + " :teamDetails");
+
         if (teamDetails.length === 0) {
             return NextResponse.json({ error: "Team not found" }, { status: 404 });
         }
@@ -35,6 +37,8 @@ export async function POST(req: Request) {
             .from(users)
             .where(eq(users.id, team.ownerId))
             .execute();
+
+        console.log(JSON.stringify(ownerDetails) + " :ownerDetails");
 
         const ownerName = ownerDetails.length > 0 ? ownerDetails[0].name : "Unknown";
         const ownerEmail = ownerDetails.length > 0 ? ownerDetails[0].email : "Unknown";
@@ -50,6 +54,8 @@ export async function POST(req: Request) {
                 .where(eq(teamMembers.userId, user_id))
                 .execute();
 
+            console.log(JSON.stringify(memberDetails) + " :memberDetails");
+
             if (memberDetails.length > 0) {
                 userRole = memberDetails[0].role;
             }
@@ -60,31 +66,44 @@ export async function POST(req: Request) {
         }
 
         // Fetch the team members and their names and emails
-        const memberDetails = await db.select({
-            userId: teamMembers.userId,
-            userName: users.name,
-            userEmail: users.email
-        })
-        .from(teamMembers)
-        .leftJoin(users, eq(teamMembers.userId, users.id))
-        .where(eq(teamMembers.teamId, teamId))
-        .where(eq(teamMembers.role, 'Member'))
-        .execute();
+        const allMemberDetails = await db.select()
+            .from(teamMembers)
+            .where(eq(teamMembers.teamId, teamId))
+            .execute();
 
-        const formattedMembers = memberDetails
-        .filter(member => member.userId !== team.ownerId) // Ensure the owner is not included
-        .map(member => ({
-            id: member.userId,
-            name: member.userName,
-            email: member.userEmail
-        }));
+        console.log(JSON.stringify(allMemberDetails) + " :allMemberDetails");
 
+        const userIds = allMemberDetails.map(member => member.userId);
+
+        let formattedMembers = [];
+        if (userIds.length > 0) {
+            const userDetails = await db.select({
+                id: users.id,
+                name: users.name,
+                email: users.email
+            })
+            .from(users)
+            .where(inArray(users.id, userIds))
+            .execute();
+
+            console.log(JSON.stringify(userDetails) + " :userDetails");
+
+            formattedMembers = userDetails
+                .filter(user => user.id !== team.ownerId) // Ensure the owner is not included
+                .map(user => ({
+                    id: user.id,
+                    name: user.name,
+                    email: user.email
+                }));
+        }
 
         // Fetch the conversations associated with the team
         const conversationsDetails = await db.select()
             .from(conversations)
             .where(eq(conversations.teamId, teamId))
             .execute();
+
+        console.log(JSON.stringify(conversationsDetails) + " :conversationsDetails");
 
         const formattedConversations = conversationsDetails.map(convo => ({
             id: convo.id,
@@ -102,7 +121,7 @@ export async function POST(req: Request) {
             role: userRole
         };
 
-        console.log(JSON.stringify(response) + " :teamDetails -- response")
+        console.log(JSON.stringify(response) + " :teamDetails -- response");
 
         return NextResponse.json(response);
     } catch (err) {
