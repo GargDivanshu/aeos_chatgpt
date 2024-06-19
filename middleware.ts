@@ -8,7 +8,7 @@ export default withAuth(async function middleware(req) {
     // console.log(url.pathname + " is not authenticated");
     return NextResponse.redirect(url);
   }
-  console.log("look at me", req.kindeAuth);
+  // console.log("look at me", req.kindeAuth);
 });
 
 export const config = {
