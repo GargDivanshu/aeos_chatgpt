@@ -14,7 +14,10 @@ export const runtime = "edge";
 
 export async function POST(req: Request) {
   try {
+    // Log to ensure the request is correctly parsed
     const requestBody = await req.json();
+    console.log("Request Body:", requestBody);
+
     const { messages: userMessages, conversationsId } = requestBody;
 
     // Validate the incoming data
@@ -48,6 +51,9 @@ export async function POST(req: Request) {
       stream: true,
     });
 
+    // Log to ensure the response is received
+    console.log("OpenAI Response:", response);
+
     // Create a stream for OpenAI response
     const stream = OpenAIStream(response, {
       onStart: async () => {
@@ -69,8 +75,14 @@ export async function POST(req: Request) {
     });
 
     return new StreamingTextResponse(stream);
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error in chat API:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+
+    return new Response(JSON.stringify({ error: error.message || "Internal Server Error" }), {
+      status: 500,
+      headers: {
+        "content-type": "application/json",
+      },
+    });
   }
 }
