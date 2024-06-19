@@ -41,7 +41,7 @@ export default function AddTeamForm({ dbUser }: Props) {
       // }
 
       const data = await response.json();
-      toast.success("Team creation done");
+      toast.success("Team creation done, pls refresh window");
       console.log('Created Team and Conversation:', data);
       // Redirect or update UI as needed
     } catch (error) {
@@ -49,6 +49,9 @@ export default function AddTeamForm({ dbUser }: Props) {
       // toast.error('Failed to create team');
     } finally {
       setLoading(false);
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
     }
   }
 

@@ -14,7 +14,16 @@ export const runtime = "edge";
 
 export async function POST(req: Request) {
   try {
-    const { messages: userMessages, conversationsId } = await req.json();
+    const requestBody = await req.json();
+    const { messages: userMessages, conversationsId } = requestBody;
+
+    // Validate the incoming data
+    if (!userMessages || !Array.isArray(userMessages)) {
+      throw new Error("Invalid userMessages");
+    }
+    if (!conversationsId) {
+      throw new Error("Invalid conversationsId");
+    }
 
     // Verify the conversation exists
     const conversation = await db.select().from(conversations).where(eq(conversations.id, conversationsId)).execute();
