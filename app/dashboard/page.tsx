@@ -17,7 +17,7 @@ export default async function Dashboard() {
     let dbUser = await db.select().from(users).where(eq(users.email, authUser.email));
 
     return (
-      <div className="container text-center relative">
+      <div className="text-center relative w-full">
       {dbUser && (
           <AddTeamForm dbUser={dbUser[0].id}/>
         )}

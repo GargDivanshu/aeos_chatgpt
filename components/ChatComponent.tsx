@@ -50,10 +50,10 @@ const ChatComponent = ({ conversationsId, conversation_name }: Props) => {
   }, [messages]);
 
   return (
-    <div className="relative h-screen w-full" id="message-container">
+    <div className="relative h-screen w-full overflow-y-auto" id="message-container">
       {/* header */}
-      <div className="sticky top-0 inset-x-0 p-2 bg-white h-fit">
-        <h3 className="text-xl font-bold">Chat - {conversation_name}</h3>
+      <div className="sticky top-0 inset-x-0 p-2 bg-white h-fit border-b-[1px] border-[#6B6B6D]">
+        <h3 className="text-xl font-bold md:text-left text-center">Chat - {conversation_name}</h3>
       </div>
 
       {/* message list */}
@@ -61,7 +61,7 @@ const ChatComponent = ({ conversationsId, conversation_name }: Props) => {
 
       <form
         onSubmit={handleSubmit}
-        className="absolute bottom-0 inset-x-0 px-2 py-4 bg-white"
+        className="absolute bottom-0 inset-x-0 px-2 py-4 bg-white border-t-[1px] border-[#6B6B6D]"
       >
         <div className="flex">
           <Input

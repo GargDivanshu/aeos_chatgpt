@@ -1,9 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 // import { DBUserProvider } from '@/context/DBUserContext';
 import Providers from "@/components/Providers";
 import { Toaster } from "react-hot-toast";
+
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -26,7 +29,7 @@ export default function RootLayout({
       style={{
         backgroundImage: 'linear-gradient(120deg, #fdfbfb 0%, #ebedee 100%)',
       }}
-      className={inter.className}>
+      className={GeistSans.className}>
         <Toaster position="bottom-center" />
         {children}
       </body>

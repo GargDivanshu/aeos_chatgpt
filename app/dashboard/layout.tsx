@@ -5,6 +5,7 @@ import { eq, inArray } from 'drizzle-orm';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { redirect } from 'next/navigation';
 import React from 'react';
+import SidebarMobile from './../../components/SidebarMobile';
 
 export default async function DashboardLayout({
   children, // will be a page or nested layout
@@ -74,7 +75,13 @@ export default async function DashboardLayout({
   }
 
   return (
-    <main className="flex min-h-screen flex-row">
+    <main className="flex min-h-screen flex-row justify-center">
+      <SidebarMobile
+       all_owned_teams={all_owned_teams} 
+       userId={dbUser[0].id} 
+       balance={dbUser[0].balance} 
+       memberTeamsData={memberTeamsData} 
+      />
       <Sidebar 
         all_owned_teams={all_owned_teams} 
         userId={dbUser[0].id} 

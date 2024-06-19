@@ -111,9 +111,9 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
   console.log(JSON.stringify(teamData) + " ::conversations")
 
   return (
-    <div className="container text-center relative">
+    <div className="container text-center flex items-center md:mt-0 my-16 mx-auto">
       {/* Render static parts here */}
-      <div className="border border-input bg-background hover:text-accent-foreground text-left shadow-md gap-2 rounded-lg absolute top-0 bottom-0 left-0 right-0 m-auto h-fit w-4/5 flex flex-col p-8">
+      <div className="border border-input bg-background hover:text-accent-foreground text-left shadow-md gap-2 rounded-lg m-auto md:min-h-fit md:w-4/5 w-screen flex flex-col p-8">
       <h1 className="md:text-2xl text-3xl text-center font-semibold">{team_name}</h1>
 
       <div className="flex flex-row gap-x-2 items-center">
@@ -121,8 +121,8 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
       <p><strong>Owner:</strong> {ownerName} ({ownerEmail})</p>
       </div>
       {/* <p><strong>Role:</strong> {role}</p> */}
-      <h2 className="md:text-xl font-semibold">Conversations</h2>
-      <ul className="w-fit gap-y-2 flex flex-col w-full">
+      <h2 className="md:text-xl font-semibold md:mt-0 mt-4">Conversations</h2>
+      <ul className="gap-2 grid md:grid-cols-3 grid-cols-1 h-22 overflow-y-auto w-full">
         {conversations.map((convo) => (
           
          <Link className="flex flex-row gap-x-2 items-center text-center w-full" key={convo.id} href={`/dashboard/conversations/${convo.id}`}>
@@ -131,15 +131,15 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
         ))}
       </ul>
       { userEmailFromDb === ownerEmail ? 
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="my-4">
         <Label htmlFor="conversationTitle">New Conversation Title</Label>
-        <div className="flex md:flex-row flex-col gap-x-2">
+        <div className="flex md:flex-row flex-col gap-x-2 md:gap-y-0 gap-y-2 md:p-0 py-4">
         <Input id="conversationTitle" name="conversation_title" type="text"
         onChange={(e) => setConvoTitle(e.target.value)}
-        className="w-3/4"
+        className="md:w-3/4 w-full"
         value={convoTitle} required />
         <Button variant="outline" 
-        className="w-1/4 text-center"
+        className="md:w-1/4 w-full text-center"
         type="submit">Create Conversation</Button>
         </div>
       </form> : null}
@@ -181,15 +181,15 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
 
       {
         userEmailFromDb === ownerEmail ? (
-        <form onSubmit={handleAddMember}>
+        <form onSubmit={handleAddMember} className="my-4">
         <Label htmlFor="memberEmail">New Member Email</Label>
-        <div className="flex md:flex-row flex-col gap-x-2">
+        <div className="flex md:flex-row flex-col gap-x-2 md:gap-y-0 gap-y-2 md:p-0 py-4">
         <Input id="memberEmail" name="member_email" type="text"
         onChange={(e) => setAddEmail(e.target.value)}
-        className="w-3/4"
+        className="md:w-3/4 w-full"
         value={addEmail} required />
         <Button variant="outline" 
-        className="w-1/4 text-center"
+        className="md:w-1/4 w-full text-center"
         type="submit">Add Member</Button>
         </div>
       </form>
