@@ -15,16 +15,16 @@ export async function POST(req: Request) {
 
     try {
         const body = await req.json();
-        const { teamId, conversation_title } = body;
+        const { teamId, conversation_title, user_id } = body;
 
         if (!teamId || !conversation_title) {
             return NextResponse.json({ error: "Missing teamId or conversation_title" }, { status: 400 });
         }
 
-        const conversationCount = await db.count()
-            .from(conversations)
-            .where(eq(conversations.teamId, teamId))
-            .execute();
+        // const conversationCount = await db.count()
+        //     .from(conversations)
+        //     .where(eq(conversations.teamId, teamId))
+        //     .execute();
 
         // if (conversationCount >= 5) {
             // return NextResponse.json({ error: "Team can have a max of 5 conversations" }, { status: 400 });
@@ -34,7 +34,7 @@ export async function POST(req: Request) {
         const [newConversation] = await db.insert(conversations).values({
             teamId,
             content: conversation_title,
-            // userId: user.id
+            userId: user_id
         }).returning({ id: conversations.id, content: conversations.content });
 
         // Fetch updated list of conversations
