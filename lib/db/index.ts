@@ -1,7 +1,7 @@
 // db/index.ts
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { drizzle } from "drizzle-orm/neon-http";
-import { users, accounts, sessions, verificationTokens, teams, teamMembers, conversations, credits } from './schema';
+import { users, accounts, sessions, verificationTokens, teams, teamMembers, conversations } from './schema';
 
 
 if (!process.env.DATABASE_URL) {
@@ -30,4 +30,4 @@ const connectWithRetry = async (retries = 5, delay = 1000): Promise<any> => {
 
 const db = await connectWithRetry();
 
-export { db, users, teams, teamMembers, conversations, credits };
+export { db, users, teams, teamMembers, conversations };
