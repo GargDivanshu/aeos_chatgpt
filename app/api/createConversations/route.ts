@@ -21,6 +21,15 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing teamId or conversation_title" }, { status: 400 });
         }
 
+        const conversationCount = await db.count()
+            .from(conversations)
+            .where(eq(conversations.teamId, teamId))
+            .execute();
+
+        if (conversationCount >= 5) {
+            return NextResponse.json({ error: "Team can have a max of 5 conversations" }, { status: 400 });
+        }
+
         // Insert new conversation
         const [newConversation] = await db.insert(conversations).values({
             teamId,
