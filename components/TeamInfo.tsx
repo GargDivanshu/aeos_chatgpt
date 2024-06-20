@@ -28,6 +28,11 @@ const TeamInfo = ({ teamData, teamId, userIdFromDb, userEmailFromDb }) => {
   const [addEmail, setAddEmail] = useState("");
   const [convoTitle, setConvoTitle] = useState("");
 
+  React.useEffect(() => {
+    setConversations(teamData.conversations);
+    setMembers(teamData.members);
+  }, [teamData])
+
   const [selectedMember, setSelectedMember] = useState(null)
 
   const handleSubmit = async (event) => {
