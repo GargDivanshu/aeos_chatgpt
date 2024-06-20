@@ -16,7 +16,6 @@ import {
     id: serial('id').primaryKey(),
     name: varchar('name').notNull(),
     email: varchar('email').unique().notNull(),
-    // password: varchar('password').notNull(),
     emailConfirmed: boolean('email_confirmed').default(false),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     balance: integer('balance').default(10).notNull(),
@@ -55,13 +54,6 @@ import {
     createdAt: timestamp('created_at').notNull().defaultNow(),
     role: userSystemEnum('role').notNull(),
 });
-  
-  export const credits = pgTable('credits', {
-    id: serial('id').primaryKey(),
-    teamId: integer('team_id').references(() => teams.id),
-    balance: integer('balance').default(0).notNull(),
-    updatedAt: timestamp('updated_at').defaultNow().notNull(),
-  });
   
   // drizzle-orm
   // drizzle-kit
