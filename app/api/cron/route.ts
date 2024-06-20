@@ -2,10 +2,14 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { db } from '@/lib/db';
 import { users } from '@/lib/db/schema';
+import { NextResponse } from 'next/server';
+import { eq } from 'drizzle-orm';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+
+
+export async function GET(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
-    res.status(405).json({ error: 'Method not allowed' });
+    return NextResponse.json({ error: 'Method not allowed' }, {status: 405});
     return;
   }
 
@@ -15,13 +19,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     for (const user of allUsers) {
       await db.update(users)
         .set({ balance: user.balance + 10 })
-        .where(users.id.eq(user.id))
+        .where(eq(users.id, user.id))
         .execute();
     }
 
-    res.status(200).json({ message: 'Balances updated successfully' });
+    return NextResponse.json({ error: 'Balance updated successfully' }, {status: 200});
   } catch (error) {
     console.error('Error updating balances:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    return NextResponse.json({ error: 'Internal Server Error' }, {status: 500});
   }
 }
